@@ -1,6 +1,9 @@
 process.env.NODE_ENV = 'test';
 
-var should = require('should');
+var chai = require('chai')
+    , expect = chai.expect
+    , should = chai.should();
+
 var actionheroPrototype = require('actionhero').actionheroPrototype;
 var actionhero = new actionheroPrototype();
 var api;
@@ -18,7 +21,7 @@ describe('actionhero Tests', function(){
     actionhero.stop(function(error){
       done();
     });
-  })
+  });
 
   it('should have booted into the test env', function(){
     process.env.NODE_ENV.should.equal('test');

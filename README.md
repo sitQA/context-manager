@@ -1,5 +1,7 @@
 # Context Manager for SitOpt
 
+[![Build Status](https://travis-ci.org/sitQA/context-manager.svg?branch=master)](https://travis-ci.org/sitQA/context-manager)
+
 Server which serves as abstraction layer to unify sensor access.
 The context manager receives and persists sensor data from physical and virtual data sources such as sensors or services.
 
