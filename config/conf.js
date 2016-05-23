@@ -8,6 +8,12 @@ var conf = convict({
         default: "development",
         env: "NODE_ENV"
     },
+    port: {
+        doc: "port on which the server should listen",
+        fomrat: "int",
+        default: 9000,
+        env: "CTX_MGR_PORT"
+    },
     amqp: {
         url: {
             doc: "The amqp connection URL for the AMQP broker to use.",

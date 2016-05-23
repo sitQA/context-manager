@@ -1,40 +1,40 @@
 process.env.NODE_ENV = 'test';
-
 var chai = require('chai')
     , expect = chai.expect
     , should = chai.should();
+var mongo = require('../db/mongo');
+var ObjectModel = require('../models/ObjectModel');
 
-var actionheroPrototype = require('actionhero').actionheroPrototype;
-var actionhero = new actionheroPrototype();
-var api;
+describe('model tests', function () {
 
-describe('actionhero Tests', function(){
+    before(function (done) {
+        mongo.connect(() => {
+            done();
+        })
+    });
 
-  before(function(done){
-    actionhero.start(function(error, a){
-      api = a;
-      done();
+
+    it('should have booted into the test env', () => {
+        process.env.NODE_ENV.should.equal('test');
+    });
+
+    it('should create objects with nested sensors', () => {
+        obj = new ObjectModel();
+        obj.name = "TestObject";
+        obj.objectId = "t1";
+        obj.sensors.push({
+            name: "testsensor1",
+            quality: 0.9,
+            type: 'temperature'
+        });
+        obj.sensors.push({
+            name: "testsensor2",
+            quality: 0.8,
+            type: 'pressure'
+        });
+        obj.save();
+
     })
-  });
 
-  after(function(done){
-    actionhero.stop(function(error){
-      done();
-    });
-  });
-
-  it('should have booted into the test env', function(){
-    process.env.NODE_ENV.should.equal('test');
-    api.env.should.equal('test');
-    should.exist(api.id);
-  });
-
-  it('can retrieve server uptime via the status action', function(done){
-    api.specHelper.runAction('status', function(response){
-      should.not.exist(response.error);
-      response.uptime.should.be.above(0);
-      done();
-    });
-  });
 
 });
