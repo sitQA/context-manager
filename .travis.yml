@@ -9,7 +9,8 @@ services:
 
 before_script:
   - npm install -g abao
-  - npm start
+  - npm start &
+  - sleep 2
 
 script:
   - npm test
