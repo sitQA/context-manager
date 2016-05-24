@@ -7,4 +7,12 @@ services:
   - rabbitmq
   - mongodb
 
+before_script:
+  - npm install -g abao
+  - npm start
+
+script:
+  - npm test
+  - npm run-script test-api
+
 sudo: required
