@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "al-omega",
+    "name":"assembly line omega",
+    "punch": {
+      "objectId": "987hc79d7bc798fc8sf",
+      "temperature": {"value": 70, "quality": 0.8},
+      "throughput": {"value": 269, "quality": 0.98}
+    },
+    "labeling": {
+      "objectId": "4565hgd7bc798fc8sf",
+      "temperature": {"value": 32, "quality": 0.75},
+      "throughpur": {"value": 270, "quality": 0.95}
+    },
+    "packaging": {
+      "objectId": "ff56786428fc8544sf",
+      "throughput": {"value": 264, "quality": 0.97}
+    }
+   }
+]

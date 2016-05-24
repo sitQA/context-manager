@@ -1,0 +1,155 @@
+#%RAML 0.8
+---
+title: SitOPT Context Manager
+baseUri: http://localhost:9000/api/{version}
+version: v1
+
+schemas:
+ - object: !include schemas/object.json
+ - sensor: !include schemas/sensor.json
+
+
+resourceTypes:
+  - readOnlyCollection:
+      description: Collection of available <<resourcePathName>> in the Context Manager.
+      get:
+        description: Get a list of <<resourcePathName>>.
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  <<exampleCollection>>
+  - collection:
+      description: Collection of available <<resourcePathName>> in the Context Manager.
+      get:
+        description: Get a list of <<resourcePathName>>.
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  <<exampleCollection>>
+      post:
+        description: |
+          Add a new <<resourcePathName|!singularize>> to the Context Manager.
+        body:
+          application/json:
+            schema: <<resourcePathName|!singularize>>
+            example: |
+              <<exampleItem>>
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  { "message": "The <<resourcePathName|!singularize>> has been properly entered" }
+  - collection-item:
+      description: Entity representing a <<resourcePathName|!singularize>>
+      get:
+        description: |
+          Get the <<resourcePathName|!singularize>>
+          with <<resourcePathName|!singularize>>Id =
+          {<<resourcePathName|!singularize>>Id}
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  <<exampleItem>>
+          404:
+            body:
+              application/json:
+                example: |
+                  {"message": "<<resourcePathName|!singularize>> not found" }
+      put:
+        description: |
+          Replace or insert a <<resourcePathName|!singularize>>
+          with <<resourcePathName|!singularize>>Id =
+          {<<resourcePathName|!singularize>>Id}
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  <<exampleItem>>
+          404:
+            body:
+              application/json:
+                example: |
+                  {"message": "<<resourcePathName|!singularize>> not found" }
+      delete:
+        description: |
+          Delete the <<resourcePathName|!singularize>> from the collection.
+        responses:
+          204:
+traits:
+  - searchable:
+      queryParameters:
+        query:
+          description: |
+            JSON array [{"field1","value1","operator1"},{"field2","value2","operator2"},...,{"fieldN","valueN","operatorN"}] <<description>>
+          example: |
+            <<example>>
+  - orderable:
+      queryParameters:
+        orderBy:
+          description: |
+            Order by field: <<fieldsList>>
+          type: string
+          required: false
+        order:
+          description: Order
+          enum: [desc, asc]
+          default: desc
+          required: false
+  - pageable:
+      queryParameters:
+        offset:
+          description: Skip over a number of elements by specifying an offset value for the query
+          type: integer
+          required: false
+          example: 20
+          default: 0
+        limit:
+          description: Limit the number of elements on the response
+          type: integer
+          required: false
+          example: 80
+          default: 10
+
+/objects:
+  type:
+    collection:
+      exampleCollection: !include examples/objects.json
+      exampleItem: !include examples/object.json
+  get:
+    is: [pageable]
+  /{objectId}:
+    type:
+      collection-item:
+        exampleItem: !include examples/object.json
+    /sensors:
+      type:
+        collection:
+          exampleCollection: !include examples/sensors.json
+          exampleItem: !include examples/sensor.json
+      /{sensorId}:
+        type:
+          collection-item:
+            exampleItem: !include examples/sensor.json
+        patch:
+          description: |
+            Updates the current sensor value
+          body:
+            application/json:
+              example: !include examples/sensorPatch.json
+          responses:
+            204:
+
+/contexts:
+  description: |
+    Collection of context objects which combine multiple objects or virtual values from other data sources.
+  type:
+    readOnlyCollection:
+      exampleCollection: !include examples/contexts.json

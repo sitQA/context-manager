@@ -1,0 +1,10 @@
+{
+  "objectId": "j8zf79wfg",
+  "isPhysical": true,
+  "isVirtual": false,
+  "sensors": [
+    {"_id": "j8zf79wfg-tmp", "type": "temperature"},
+    {"_id": "j8zf79wfg-pre", "type": "pressure"}
+  ],
+  "name": "machine xy"
+}
