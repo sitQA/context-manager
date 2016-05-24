@@ -6,6 +6,7 @@ var ObjectModel = require('../models/ObjectModel');
 router.get('/', function(req, res, next) {
     const mongo = req.app.locals.db;
     mongo.collection('objects').find().toArray((err, docs) => {
+        console.log(docs);
         res.send(docs);
     });
 });

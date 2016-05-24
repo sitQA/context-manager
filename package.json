@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha",
-    "test-api": "abao api/api.raml --server http://localhost:9000"
+    "test-api": "abao api/api.raml --server http://localhost:9000/api/v1 --hookfiles test/abao-hooks/*.js -H"
   },
   "repository": {
     "type": "git",
