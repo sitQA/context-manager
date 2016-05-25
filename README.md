@@ -24,4 +24,4 @@ supports polling for data.
 ## Configuration
 
 Deployment specific settings can be provided with environment variables or via json files.
-See `config/appConfig.js` for available properties and defaults.
+See `config/conf.js` for available properties and defaults.

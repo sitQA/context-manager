@@ -1,0 +1,5 @@
+{
+  "mongodb": {
+    "database": "sitopt-ctx-mgr-test"
+  }
+}

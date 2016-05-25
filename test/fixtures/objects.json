@@ -1,0 +1,34 @@
+[
+  {
+    "name": "TestObject1",
+    "objectId": "t1",
+    "sensors": [
+      {
+        "name": "testsensor1",
+        "quality": 0.9,
+        "type": "temperature"
+      },
+      {
+        "name": "testsensor2",
+        "quality": 0.8,
+        "type": "pressure"
+      }
+    ]
+  },
+  {
+    "name": "TestObject2",
+    "objectId": "t2",
+    "sensors": [
+      {
+        "name": "testsensor1",
+        "quality": 0.9,
+        "type": "velocity"
+      },
+      {
+        "name": "testsensor2",
+        "type": "acceleration"
+      }
+    ]
+  }
+
+]

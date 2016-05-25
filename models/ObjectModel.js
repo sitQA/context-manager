@@ -12,12 +12,12 @@ var sensorSchema = new mongoose.Schema({
     type: String,
     unit: String,
     unitSymbol: String
-
 });
 
 
+
 var objectSchema = new mongoose.Schema({
-    objectId: String,
+    objectId: {type: String, index: {unique: true}},
     name: String,
     type: String,
     sensors: [sensorSchema]
