@@ -4,32 +4,42 @@ var router = express.Router();
 var ObjectModel = require('../models/ObjectModel');
 
 router.get('/', function(req, res, next) {
-    const mongo = req.app.locals.db;
-    mongo.collection('objects').find().toArray((err, docs) => {
-        console.log(docs);
+    ObjectModel.find().exec((err, docs) => {
         res.send(docs);
     });
 });
 
 router.post('/', function(req, res, next) {
     var obj = req.params.obj;
-    getCollection(req).insertOne(req.body, (err, result) => {
-        res.send(result);
-    });
+    var obj = new ObjectModel(req.body);
+    obj.save((err) => {
+        if(err) {
+            res.send(err);
+        } else {
+            req.send(obj);
+        }
+    })
 });
 
 router.get('/:objId', function(req, res, next) {
     var id = req.params.objId;
-    getCollection(req).find({_id: id}).limit(1).next((err, doc) => {
-        res.send(doc);
+    ObjectModel.findOne({"objectId": id}).exec((err, doc) => {
+        if(err) {
+            res.send(err);
+        } else {
+            res.send(doc);
+        }
     });
 });
 
+router.get('/:objId/sensors', function(req, res, next) {
+    var id = req.params.objId;
 
-function getCollection(req) {
-    const mongo = req.app.locals.db;
-    return mongo.collection('objects');
-}
+});
 
+router.get('/:objId/sensors/:sensorId', function(req, res, next) {
+    var id = req.params.objId;
+
+});
 
 module.exports = router;

@@ -3,6 +3,9 @@ node_js:
   - "5"
   - "4"
 
+env:
+  - NODE_ENV=test
+
 services:
   - rabbitmq
   - mongodb
