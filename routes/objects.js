@@ -10,8 +10,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    var obj = req.params.obj;
-    var obj = new ObjectModel(req.body);
+    var obj = new ObjectModel(req.params.obj);
     obj.save((err) => {
         if(err) {
             res.send(err);
@@ -23,9 +22,13 @@ router.post('/', function(req, res, next) {
 
 router.get('/:objId', function(req, res, next) {
     var id = req.params.objId;
+
     ObjectModel.findOne({"objectId": id}).exec((err, doc) => {
         if(err) {
             res.send(err);
+        } else if (doc === null) {
+            res.statusCode = 404;
+            res.send({error: "not found"});
         } else {
             res.send(doc);
         }
