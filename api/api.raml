@@ -48,6 +48,7 @@ resourceTypes:
               application/json:
                 example: |
                   { "message": "The <<resourcePathName|!singularize>> has been properly entered" }
+                schema: <<resourcePathName|!singularize>>
   - collection-item:
       description: Entity representing a <<resourcePathName|!singularize>>
       get:

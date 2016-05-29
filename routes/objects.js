@@ -35,17 +35,22 @@ router.param("sensorId", function(req, res, next, id) {
 
 router.get('/', function(req, res, next) {
     ObjectModel.find().exec((err, docs) => {
+        if(err) {
+            next(err);
+        }
         res.send(docs);
     });
 });
 
 router.post('/', function(req, res, next) {
-    var obj = new ObjectModel(req.params.obj);
+    console.log(req.body);
+    var obj = new ObjectModel(req.body);
     obj.save((err) => {
         if(err) {
-            res.send(err);
+            next(err);
         } else {
-            req.send(obj);
+            res.statusCode = 201;
+            res.send(obj);
         }
     })
 });
@@ -54,9 +59,19 @@ router.get('/:objId', function(req, res, next) {
     res.send(req.object);
 });
 
+router.delete('/:objId', function(req, res, next) {
+    req.object.remove(err => {
+        if(err) {
+            next(err);
+        } else {
+            res.statusCode = 204;
+            res.send();
+        }
+    });
+});
+
 router.get('/:objId/sensors', function(req, res, next) {
     res.send(req.object.sensors);
-
 });
 
 router.post('/:objId/sensors', function(req, res, next) {
@@ -70,7 +85,6 @@ router.post('/:objId/sensors', function(req, res, next) {
             res.send(req.body);
         }
     });
-
 });
 
 router.get('/:objId/sensors/:sensorId', function(req, res, next) {
