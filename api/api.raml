@@ -8,6 +8,7 @@ schemas:
  - object: !include schemas/object.json
  - sensor: !include schemas/sensor.json
  - array: !include schemas/collection.json
+ - message: !include schemas/message.json
 
 
 resourceTypes:
@@ -60,11 +61,13 @@ resourceTypes:
               application/json:
                 example: |
                   <<exampleItem>>
+                schema: <<schemaItem>>
           404:
             body:
               application/json:
                 example: |
                   {"message": "<<resourcePathName|!singularize>> not found" }
+                schema: message
       put:
         description: |
           Replace or insert a <<resourcePathName|!singularize>>
@@ -81,6 +84,7 @@ resourceTypes:
               application/json:
                 example: |
                   {"message": "<<resourcePathName|!singularize>> not found" }
+                schema: message
       delete:
         description: |
           Delete the <<resourcePathName|!singularize>> from the collection.
@@ -131,6 +135,7 @@ traits:
     type:
       collection-item:
         exampleItem: !include examples/object.json
+        schemaItem: object
     /sensors:
       type:
         collection:
@@ -141,6 +146,7 @@ traits:
         type:
           collection-item:
             exampleItem: !include examples/sensor.json
+            schemaItem: sensor
         patch:
           description: |
             Updates the current sensor value

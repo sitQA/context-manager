@@ -16,7 +16,6 @@ hooks.before('GET /objects/{objectId} -> 200', function (test, done) {
 
 hooks.after('GET /objects/{objectId} -> 200', function(test, done) {
     obj = test.response.body;
-    console.log(test.response);
     expect(obj).to.be.a("object");
     done();
 });
