@@ -7,6 +7,7 @@ var ex = conf.get('amqp.contextExchange');
 var connect = function(callback) {
     amqp.connect(conf.get('amqp.url'), function(err, conn) {
         conn.createChannel(function(err, ch) {
+            if(err) throw err;
             ch.assertExchange(ex, 'topic', {durable: false});
             channel = ch;
             callback();

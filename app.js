@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var conf = require('./config/conf');
 var routes = require('./routes/index');
 var objects = require('./routes/objects');
+var fleetsimRouter = require('./adapters/fleetsim/router');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/v1/objects', objects);
+app.use('/api/v1/fleet-telematics', fleetsimRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
