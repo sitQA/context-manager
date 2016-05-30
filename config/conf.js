@@ -24,7 +24,7 @@ var conf = convict({
         contextExchange: {
             doc: "name opf the amqp exchange where context information should be published (pub/sub style)",
             format: String,
-            default: "situations",
+            default: "context",
             env: "AMQP_CONTEXT_EXCHANGE"
         }
     },

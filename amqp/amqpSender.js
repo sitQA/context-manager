@@ -1,11 +1,11 @@
 var amqp = require('amqplib/callback_api');
-var logger = require('morgan');
+var conf = require('../config/conf');
 
 var channel = null;
-var ex = 'sensorvalues';
+var ex = conf.get('amqp.contextExchange');
 
 var connect = function(callback) {
-    amqp.connect('amqp://localhost', function(err, conn) {
+    amqp.connect(conf.get('amqp.url'), function(err, conn) {
         conn.createChannel(function(err, ch) {
             ch.assertExchange(ex, 'topic', {durable: false});
             channel = ch;
