@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var ObjectModel = require('../models/ObjectModel');
+var SensorValueModel = require('../models/SensorValueModel');
 
 // set object model in req context
 router.param("objId", function(req, res, next, id) {
@@ -107,22 +108,29 @@ router.delete('/:objId/sensors/:sensorId', function(req, res, next) {
 });
 
 
-router.patch('/:objId/sensors/:sensorId', function(req, res, next) {
-    var update = req.body;
-    if(update.hasOwnProperty('value') && update.hasOwnProperty('timestamp')) {
-        req.sensor.value = update.value;
-        req.sensor.timestamp = update.timestamp;
-        req.object.save(err => {
-            if(err) next(err);
-            res.statusCode = 204;
-            res.send();
-        });
-
-    } else {
-        var err = new Error('Value and timestamp fields must be present in request body.');
-        err.status = 400;
-        next(err);
-    }
+router.get('/:objId/sensors/:sensorId/values', function(req, res, next) {
+    getSensorValues(req, res, next);
 });
+
+router.get('/:objId/sensors/:sensorId/values/latest', function(req, res, next) {
+    getSensorValues(req, res, next, 1);
+});
+
+function getSensorValues(req, res, next, limit) {
+    if(limit === undefined) {
+        limit = 10;
+    }
+    var query = {
+        objectId: req.object.objectId,
+        sensorId: req.sensor._id
+    };
+    SensorValueModel.find(query).sort({ts: -1}).limit(limit).exec((err, docs) => {
+        if(err) {
+            next(err);
+        } else {
+            res.send(docs);
+        }
+    });
+}
 
 module.exports = router;

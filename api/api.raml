@@ -157,6 +157,20 @@ traits:
             readOnlyCollection:
               exampleCollection: !include examples/sensorValues.json
               schemaCollection: array
+          /latest:
+            get:
+              description: |
+                Returns the latest available value that was captured from the corresponding sensor.
+              res
+              responses:
+                200:
+                  body:
+                    application/json:
+                      schema: sensorValue
+                404:
+                  body:
+                    application/json:
+                      schema: message
 
 /contexts:
   description: |
@@ -165,3 +179,4 @@ traits:
     readOnlyCollection:
       exampleCollection: !include examples/contexts.json
       schemaCollection: array
+
