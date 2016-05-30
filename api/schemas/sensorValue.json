@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "properties": {
+    "sensorId": {
+      "type": "string",
+      "required":true
+    },
+    "objectId": {
+      "type": "string",
+      "required":true
+    },
+    "quality": {
+      "type": "number",
+      "required":true
+    },
+    "ts": {
+      "type": "date",
+      "required": true
+    }
+  }
+}

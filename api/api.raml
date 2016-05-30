@@ -7,6 +7,7 @@ version: v1
 schemas:
  - object: !include schemas/object.json
  - sensor: !include schemas/sensor.json
+ - sensorValue: !include schemas/sensorValue.json
  - array: !include schemas/collection.json
  - message: !include schemas/message.json
 
@@ -148,14 +149,14 @@ traits:
           collection-item:
             exampleItem: !include examples/sensor.json
             schemaItem: sensor
-        patch:
-          description: |
-            Updates the current sensor value
-          body:
-            application/json:
-              example: !include examples/sensorPatch.json
-          responses:
-            204:
+        /values:
+          get:
+            description: |
+              Returns a list of the most recent values as reported by the corresponding sensor.
+          type:
+            readOnlyCollection:
+              exampleCollection: !include examples/sensorValues.json
+              schemaCollection: array
 
 /contexts:
   description: |

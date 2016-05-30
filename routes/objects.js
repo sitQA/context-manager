@@ -82,7 +82,6 @@ router.post('/:objId/sensors', function(req, res, next) {
             next(err);
         } else {
             res.statusCode = 201;
-            //TODO: return obj with _id that has been assigned to doc
             res.send(doc);
         }
     });
@@ -111,13 +110,14 @@ router.delete('/:objId/sensors/:sensorId', function(req, res, next) {
 router.patch('/:objId/sensors/:sensorId', function(req, res, next) {
     var update = req.body;
     if(update.hasOwnProperty('value') && update.hasOwnProperty('timestamp')) {
-        req.sensor.update(update, err => {
-            if(err) {
-                next(err);
-            }
+        req.sensor.value = update.value;
+        req.sensor.timestamp = update.timestamp;
+        req.object.save(err => {
+            if(err) next(err);
             res.statusCode = 204;
             res.send();
         });
+
     } else {
         var err = new Error('Value and timestamp fields must be present in request body.');
         err.status = 400;
