@@ -4,7 +4,9 @@ var chai = require('chai')
     , should = chai.should();
 var mongo = require('../db/mongo');
 var ObjectModel = require('../models/ObjectModel');
+var SensorValueModel = require('../models/SensorValueModel');
 var objectFixtures = require('./fixtures/objects.json');
+var amqp = require('../amqp/amqpSender');
 
 describe('model tests', function () {
 

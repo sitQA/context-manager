@@ -5,16 +5,20 @@ var conf = require('../config/conf');
 var debug = require('debug')('context-manager:server');
 var http = require('http');
 var mongo = require('../db/mongo');
+var amqp = require('../amqp/amqpSender');
 
 var port = conf.get('port');
 app.set('port', port);
 var server = http.createServer(app);
 
 mongo.connect(db => {
-        app.locals.db = db;
-        server.listen(port);
-        server.on('error', onError);
-        server.on('listening', onListening);
+  amqp.connect(() => {
+    app.locals.db = db;
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  })
+
 });
 
 
