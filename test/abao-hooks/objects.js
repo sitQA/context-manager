@@ -61,3 +61,15 @@ hooks.after('DELETE /objects/{objectId} -> 204', function(test, done) {
     expect(test.response.body).to.be.null;
     done();
 });
+
+
+hooks.before('POST /objects/{objectId} -> 201', function (test, done) {
+    test.request.params = {objectId: "t1"};
+    test.request.body = {name: "temp-sensor", id: "identifier", unit: "hPa"};
+    done();
+});
+
+hooks.after('POST /objects/{objectId} -> 201', function(test, done) {
+    expect(test.response.body).to.have.property("_id");
+    done();
+});

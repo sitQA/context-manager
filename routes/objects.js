@@ -75,21 +75,54 @@ router.get('/:objId/sensors', function(req, res, next) {
 });
 
 router.post('/:objId/sensors', function(req, res, next) {
-    req.object.sensors.push(req.body);
+    var doc = req.object.sensors.create(req.body);
+    req.object.sensors.push(doc);
     req.object.save(err => {
         if(err) {
-            next(new Error("could not save sensor"));
+            next(err);
         } else {
             res.statusCode = 201;
             //TODO: return obj with _id that has been assigned to doc
-            res.send(req.body);
+            res.send(doc);
         }
     });
 });
 
+
 router.get('/:objId/sensors/:sensorId', function(req, res, next) {
     var id = req.params.sensorId;
     res.send(req.sensor);
+});
+
+
+router.delete('/:objId/sensors/:sensorId', function(req, res, next) {
+    req.sensor.remove();
+    req.object.save(err => {
+        if(err) {
+            next(err);
+        } else {
+            res.statusCode = 204;
+            res.send();
+        }
+    });
+});
+
+
+router.patch('/:objId/sensors/:sensorId', function(req, res, next) {
+    var update = req.body;
+    if(update.hasOwnProperty('value') && update.hasOwnProperty('timestamp')) {
+        req.sensor.update(update, err => {
+            if(err) {
+                next(err);
+            }
+            res.statusCode = 204;
+            res.send();
+        });
+    } else {
+        var err = new Error('Value and timestamp fields must be present in request body.');
+        err.status = 400;
+        next(err);
+    }
 });
 
 module.exports = router;
