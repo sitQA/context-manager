@@ -1,26 +1,19 @@
 var mongoose = require('mongoose');
 
-
-var sensorSchema = new mongoose.Schema({
-    name: String,
-    url: String,
-    quality: {
-        type: Number,
-        min: 0.0,
-        max: 1.0
-    },
-    type: String,
-    unit: String,
-    unitSymbol: String
-});
-
-
-
 var objectSchema = new mongoose.Schema({
     objectId: {type: String, index: {unique: true}},
     name: String,
     type: String,
-    sensors: [sensorSchema]
+    sensors: {type: mongoose.Schema.Types.Mixed, default: {}}
+});
+
+objectSchema.method('hasSensor', function(sensorSlug) {
+    return this.model('Object').sensors.hasOwnProperty(sensorSlug);
+});
+
+objectSchema.method('getSensor', function(sensorSlug) {
+    console.log(this);
+    return this.sensors[sensorSlug];
 });
 
 module.exports = mongoose.model('Object', objectSchema);
