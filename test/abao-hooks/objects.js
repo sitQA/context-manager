@@ -73,6 +73,17 @@ hooks.after('POST /objects/{objectId} -> 201', function(test, done) {
     done();
 });
 
+hooks.before('POST /objects/{objectId}/sensors -> 201', function (test, done) {
+    test.request.params = {objectId: "t1"};
+    test.request.body = {"slug":"tempsensor", "quality": 0.9, "name": "temperaturesensor", "type": "temperature"};
+    done();
+});
+
+hooks.before('DELETE /objects/{objectId}/sensors/{sensorId} -> 204', function(test, done) {
+    test.request.params = {objectId: "t1", sensorId: "tempsensor"};
+    done();
+});
+
 hooks.before('GET /objects/{objectId}/sensors -> 200', function (test, done) {
     test.request.params = {objectId: "t1"};
     done();
