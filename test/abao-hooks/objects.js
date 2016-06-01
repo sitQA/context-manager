@@ -79,6 +79,11 @@ hooks.before('POST /objects/{objectId}/sensors -> 201', function (test, done) {
     done();
 });
 
+hooks.before('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test, done) {
+    test.request.params = {objectId: "t1", sensorId: "tempsensor"};
+    done();
+});
+
 hooks.before('DELETE /objects/{objectId}/sensors/{sensorId} -> 204', function(test, done) {
     test.request.params = {objectId: "t1", sensorId: "tempsensor"};
     done();
@@ -97,5 +102,10 @@ hooks.before('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test,
 hooks.after('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test, done) {
     var obj = test.response.body;
     expect(obj).to.be.an("object");
+    done();
+});
+
+hooks.before('GET /objects/{objectId}/sensors/{sensorId} -> 404', function(test, done) {
+    test.request.params = {objectId: "t1", sensorId: "sensor not present"};
     done();
 });

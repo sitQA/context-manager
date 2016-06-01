@@ -24,7 +24,7 @@ router.param("objId", function(req, res, next, id) {
 // set sensor model in req context
 router.param("sensorId", function(req, res, next, id) {
     var sensor = req.object.getSensor(id);
-    if(sensor === null) {
+    if(sensor === undefined || sensor === null) {
         var err = new Error('Object does not have a sensor with id ' + id);
         err.status = 404;
         next(err);
