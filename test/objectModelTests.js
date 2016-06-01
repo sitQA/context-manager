@@ -15,7 +15,6 @@ describe('model tests', function () {
             // remove old data
             ObjectModel.remove({}).then(function(res) {
                 ObjectModel.collection.insert(objectFixtures, {}, function(res){
-                    console.log(res);
                     done();
                 });
             });
@@ -27,24 +26,24 @@ describe('model tests', function () {
         process.env.NODE_ENV.should.equal('test');
     });
 
-    it('should create objects with nested sensors', (done) => {
+    it('should provide sensor access via instance methods', () => {
         obj = new ObjectModel();
         obj.name = "TestObject";
         obj.objectId = "object";
-        obj.sensors.push({
+        obj.sensors.testsensor1 = {
             name: "testsensor1",
             quality: 0.9,
             type: 'temperature'
-        });
-        obj.sensors.push({
+        };
+        var testsensor2 = {
             name: "testsensor2",
             quality: 0.8,
             type: 'pressure'
-        });
-        obj.save(err => {
-            expect(err).to.be.null;
-            done();
-        });
+        };
+        obj.sensors.testsensor2 = testsensor2;
+        var hasSesnors = obj.hasSensor("testsensor1") && obj.hasSensor("testsensor2");
+        expect(hasSesnors).to.be.true;
+        expect(obj.getSensor("testsensor2")).to.equal(testsensor2);
 
     });
 

@@ -8,11 +8,10 @@ var objectSchema = new mongoose.Schema({
 });
 
 objectSchema.method('hasSensor', function(sensorSlug) {
-    return this.model('Object').sensors.hasOwnProperty(sensorSlug);
+    return this.sensors.hasOwnProperty(sensorSlug);
 });
 
 objectSchema.method('getSensor', function(sensorSlug) {
-    console.log(this);
     return this.sensors[sensorSlug];
 });
 
