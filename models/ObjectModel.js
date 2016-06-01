@@ -25,5 +25,12 @@ objectSchema.method('getSensorArray', function() {
     return arr;
 });
 
+objectSchema.method('addSensor', function(sensor) {
+    this.sensors[sensor.slug] = sensor;
+    this.markModified('sensors');
+});
+
+//TODO: validate sensors on save
+
 module.exports = mongoose.model('Object', objectSchema);
 

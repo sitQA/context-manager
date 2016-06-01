@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var ObjectModel = require('../models/ObjectModel');
+var SensorModel = require('../models/SensorModel');
 var SensorValueModel = require('../models/SensorValueModel');
 
 // set object model in req context
@@ -76,14 +77,14 @@ router.get('/:objId/sensors', function(req, res, next) {
 });
 
 router.post('/:objId/sensors', function(req, res, next) {
-    var doc = req.object.sensors.create(req.body);
-    req.object.sensors.push(doc);
+    var sensor = new SensorModel(req.body);
+    req.object.addSensor(sensor);
     req.object.save(err => {
         if(err) {
             next(err);
         } else {
             res.statusCode = 201;
-            res.send(doc);
+            res.send(req.object);
         }
     });
 });
@@ -122,7 +123,7 @@ function getSensorValues(req, res, next, limit) {
     }
     var query = {
         objectId: req.object.objectId,
-        sensorId: req.sensor._id
+        sensorId: req.sensor.slug
     };
     SensorValueModel.find(query).sort({ts: -1}).limit(limit).exec((err, docs) => {
         if(err) {
