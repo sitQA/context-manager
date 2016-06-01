@@ -30,6 +30,11 @@ objectSchema.method('addSensor', function(sensor) {
     this.markModified('sensors');
 });
 
+objectSchema.method('removeSensor', function(slug) {
+    delete this.sensors[slug];
+    this.markModified('sensors');
+});
+
 //TODO: validate sensors on save
 
 module.exports = mongoose.model('Object', objectSchema);

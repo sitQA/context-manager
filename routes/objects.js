@@ -97,7 +97,7 @@ router.get('/:objId/sensors/:sensorId', function(req, res, next) {
 
 
 router.delete('/:objId/sensors/:sensorId', function(req, res, next) {
-    req.sensor.remove();
+    req.object.removeSensor(req.sensor.slug);
     req.object.save(err => {
         if(err) {
             next(err);
