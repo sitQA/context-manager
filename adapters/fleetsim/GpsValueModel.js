@@ -8,11 +8,6 @@ var gpsSchema = new mongoose.Schema({
 });
 
 // is a special type of SensorValue
-try {
-    var GpsValueModel = SensorValueModel.discriminator('GpsValue', gpsSchema);
-} catch(e) {
-    console.log(e);
-}
-
+var GpsValueModel = SensorValueModel.discriminator('GpsValue', gpsSchema);
 
 module.exports = GpsValueModel;

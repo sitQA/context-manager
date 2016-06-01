@@ -22,14 +22,14 @@ router.post('/', function(req, res, next) {
         bearing: req.body.bearing,
         horizontalAccuracy: req.body.horizontalAccuracy,
         quality: (100 - req.body.horizontalAccuracy) / 100,
-        ts: req.body.timeStamp
+        ts: new Date(req.body.timeStamp)
     });
 
     var tempVal = new TemperatureValueModel({
         objectId: objId,
         sensorId: "load-temp",
         temperature: ""+req.body.temperature,
-        ts: req.body.timeStamp
+        ts: new Date(req.body.timeStamp)
     });
 
     var update = {
