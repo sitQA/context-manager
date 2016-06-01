@@ -51,7 +51,6 @@ hooks.after('GET /objects/{objectId} -> 404', function(test, done) {
     done();
 });
 
-
 hooks.before('DELETE /objects/{objectId} -> 204', function (test, done) {
     test.request.params = {objectId: OBJ_ID};
     done();
@@ -71,5 +70,20 @@ hooks.before('POST /objects/{objectId} -> 201', function (test, done) {
 
 hooks.after('POST /objects/{objectId} -> 201', function(test, done) {
     expect(test.response.body).to.have.property("_id");
+    done();
+});
+
+hooks.before('GET /objects/{objectId}/sensors -> 200', function (test, done) {
+    test.request.params = {objectId: "t1"};
+    done();
+});
+
+hooks.before('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test, done) {
+    test.request.params = {objectId: "t1", sensorId: "testsensor1"};
+    done();
+});
+
+hooks.after('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test, done) {
+    console.log(test.response.body);
     done();
 });
