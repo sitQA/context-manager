@@ -13,7 +13,7 @@ var sensorValueSchema = new mongoose.Schema({
         min: 0.0,
         max: 1.0
     }
-});
+}, {timestamps: true});
 
 sensorValueSchema.post('save', (doc) => {
     // publish new sensor values via AMQP

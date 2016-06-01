@@ -2,8 +2,8 @@
 var express = require('express');
 var router = express.Router();
 var ObjectModel = require('../../models/ObjectModel');
-var SensorValueModel = require('../../models/SensorValueModel');
-var ObjectId = require('mongoose').Types.ObjectId;
+var GpsValueModel = require('./GpsValueModel');
+var TemperatureValueModel = require('./TemperatureValueModel');
 
 router.get('/', function(req, res, next) {
     res.send({message: 'resource expects post requests from the fleetsim trucksimulation with telematics data'});
@@ -14,7 +14,7 @@ router.post('/', function(req, res, next) {
     var gpsSensor = {type: "gps", name: "gps", slug: "gps"};
     var tempSensor = {type: "temperature", name: "load temperature", slug: "load-temp"};
 
-    var gpsVal = new SensorValueModel({
+    var gpsVal = new GpsValueModel({
         objectId: objId,
         sensorId: "gps",
         position: req.body.position,
@@ -25,13 +25,20 @@ router.post('/', function(req, res, next) {
         ts: req.body.timeStamp
     });
 
-    var update= {
+    var tempVal = new TemperatureValueModel({
+        objectId: objId,
+        sensorId: "load-temp",
+        temperature: ""+req.body.temperature,
+        ts: req.body.timeStamp
+    });
+
+    var update = {
         "$set": {
             objectId: objId,
             lastSeen: req.body.timeStamp,
             type: "truck",
             "sensors.gps": gpsSensor,
-            "sensors.temp": tempSensor
+            "sensors.load-temp": tempSensor
         }
     };
     var query = {objectId: objId};
@@ -46,6 +53,11 @@ router.post('/', function(req, res, next) {
                 } else {
                     res.statusCode = 204;
                     res.send();
+                }
+            });
+            tempVal.save(err => {
+                if(err) {
+                    console.log(err);
                 }
             });
 
