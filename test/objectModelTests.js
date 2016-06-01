@@ -57,5 +57,16 @@ describe('model tests', function () {
 
     });
 
+    it('should have an instance method to return sensors as array', () => {
+        var obj = new ObjectModel();
+        expect(obj.getSensorArray).to.be.a("function");
+        expect(obj.getSensorArray()).to.be.a(Array);
+        expect(obj.getSensorArray().length).to.equal(0);
+        
+        obj.sensors.testsensor = {name: "testsensor", quality: 0.3, url: "http://sensorurl.local"};
+        expect(obj.getSensorArray()).to.be.a(Array);
+        expect(obj.getSensorArray().length).to.equal(1);
+    });
+
 
 });
