@@ -15,5 +15,15 @@ objectSchema.method('getSensor', function(sensorSlug) {
     return this.sensors[sensorSlug];
 });
 
+objectSchema.method('getSensorArray', function() {
+    var arr = [];
+    if(this.sensors instanceof Object) {
+        for(property in this.sensors) {
+            arr.push(property);
+        }
+    }
+    return arr;
+});
+
 module.exports = mongoose.model('Object', objectSchema);
 

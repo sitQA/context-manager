@@ -47,7 +47,7 @@ hooks.before('GET /objects/{objectId} -> 404', function (test, done) {
 
 hooks.after('GET /objects/{objectId} -> 404', function(test, done) {
     var obj = test.response.body;
-    expect(obj).to.be.a("object");
+    expect(obj).to.be.an("object");
     done();
 });
 
@@ -84,6 +84,7 @@ hooks.before('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test,
 });
 
 hooks.after('GET /objects/{objectId}/sensors/{sensorId} -> 200', function(test, done) {
-    console.log(test.response.body);
+    var obj = test.response.body;
+    expect(obj).to.be.an("object");
     done();
 });

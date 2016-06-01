@@ -72,7 +72,7 @@ router.delete('/:objId', function(req, res, next) {
 });
 
 router.get('/:objId/sensors', function(req, res, next) {
-    res.send(req.object.sensors);
+    res.send(req.object.getSensorArray());
 });
 
 router.post('/:objId/sensors', function(req, res, next) {
