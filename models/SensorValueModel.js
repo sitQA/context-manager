@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var amqp = require('../amqp/amqpSender');
 
 var sensorValueSchema = new mongoose.Schema({
-    objectId: {type: String, index: true},
-    sensorId: {type: String, index: true},
+    objectId: {type: String, index: true, required: true},
+    sensorId: {type: String, index: true, required: true},
     // auto-remove old documents to prevent huge collections
     // might need to be disabled if impact on performance is too high
     // possible alternatives: capped collection, embedded fixed length arrays
@@ -13,11 +13,11 @@ var sensorValueSchema = new mongoose.Schema({
         min: 0.0,
         max: 1.0
     }
-}, {timestamps: true});
+}, {timestamps: { createdAt: 'updated_at', updatedAt: 'updated_at' }}); // only store update ts
 
 sensorValueSchema.post('save', (doc) => {
     // publish new sensor values via AMQP
-    amqp.publish(doc, doc.objectId, doc.sensorid);
+    amqp.publish(doc, doc.objectId, doc.sensorId);
 });
 
 module.exports = mongoose.model('SensorValue', sensorValueSchema);

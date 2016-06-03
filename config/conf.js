@@ -11,7 +11,7 @@ var conf = convict({
     port: {
         doc: "port on which the server should listen",
         fomrat: "int",
-        default: 9000,
+        default: 9090,
         env: "CTX_MGR_PORT"
     },
     amqp: {
@@ -26,30 +26,6 @@ var conf = convict({
             format: String,
             default: "context",
             env: "AMQP_CONTEXT_EXCHANGE"
-        }
-    },
-    redis: {
-        host: {
-            doc: "redis host",
-            format: String,
-            default: "127.0.0.1",
-            env: "REDIS_HOST"
-        },
-        port: {
-            doc: "redis port",
-            format: "int",
-            default: 6379,
-            env: "REDIS_PORT"
-        },
-        database: {
-            doc: "redis database number to use",
-            default: 0,
-            env: "REDIS_DB"
-        },
-        password: {
-            doc: "redis password",
-            default: null,
-            env: "REDIS_PW"
         }
     },
     mongodb: {
