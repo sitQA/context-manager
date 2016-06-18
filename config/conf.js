@@ -10,7 +10,7 @@ var conf = convict({
     },
     port: {
         doc: "port on which the server should listen",
-        fomrat: "int",
+        format: "int",
         default: 9090,
         env: "CTX_MGR_PORT"
     },
@@ -22,7 +22,7 @@ var conf = convict({
             env: "AMQP_URL"
         },
         contextExchange: {
-            doc: "name opf the amqp exchange where context information should be published (pub/sub style)",
+            doc: "name of the amqp exchange where context information should be published (pub/sub style)",
             format: String,
             default: "context",
             env: "AMQP_CONTEXT_EXCHANGE"

@@ -7,11 +7,11 @@ var ContextModel = require('../../models/ContextModel');
 var truckContextSchema = new mongoose.Schema({
     closestTraffic: {
         trafficObj: {type: mongoose.Schema.Types.Mixed}, // incident as reported by the traffic service
-        distance: {type: number} // distance between truck and traffic incident
+        distance: {type: "number"} // distance between truck and traffic incident
     },
     gpsValue: {type: mongoose.Schema.Types.Mixed} //sensor value
 });
 
-var TruckContextModel = SensorValueModel.discriminator('TemperatureValue', truckContextSchema);
+var TruckContextModel = ContextModel.discriminator('TruckContext', truckContextSchema);
 
 module.exports = TruckContextModel;

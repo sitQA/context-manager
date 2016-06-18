@@ -21,4 +21,4 @@ sensorValueSchema.post('save', (doc) => {
     amqp.publish(doc, doc.type, doc.id);
 });
 
-module.exports = mongoose.model('SensorValue', sensorValueSchema);
+module.exports = mongoose.model('Context', sensorValueSchema);
