@@ -19,7 +19,7 @@ var conf = convict({
 // Load environment dependent configuration
 var env = conf.get('env');
 try {
-    conf.loadFile('./config/' + env + '.json');
+    conf.loadFile('./config/fleetsim/' + env + '.json');
 } catch(e) {
     // no config file present, will use defaults
 }
