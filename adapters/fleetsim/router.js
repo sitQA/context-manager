@@ -6,15 +6,24 @@ var ObjectModel = require('../../models/ObjectModel');
 var GpsValueModel = require('./GpsValueModel');
 var TruckContextModel = require('./TruckContextModel');
 var TemperatureValueModel = require('./TemperatureValueModel');
+var http = require('http');
 
 router.get('/', function(req, res, next) {
     res.send({message: 'resource expects post requests from the fleetsim trucksimulation with telematics data'});
 });
 
+router.post('/', saveObjectAndSensor);
+router.post('/', saveSensorValues);
+router.post('/', saveTrafficContext);
 
 
-// make sure objects and sensors are present as logical representation
-router.post('/', function(req, res, next) {
+/**
+ * Extracts the object id from the message and makes sure that the object and its sensors are logically represented in
+ * the context manager.
+ * In production mode this should be disabled. Instead objects should be registered manually and messages from
+ * unknown sources should be discarded.
+ */
+function saveObjectAndSensor(req, res, next) {
     var objId = req.body.truckId;
     var gpsSensor = {type: "gps", name: "gps", slug: "gps"};
     var tempSensor = {type: "temperature", name: "load temperature", slug: "load-temp"};
@@ -36,10 +45,17 @@ router.post('/', function(req, res, next) {
             next();
         }
     });
-});
+}
 
-// save sensor values
-router.post('/', function(req, res, next) {
+/**
+ * Decomposes the message received from the telemetry box and stores values of the sensors as separate
+ * documents in the DB.
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+function saveSensorValues(req, res, next) {
     var objId = req.body.truckId;
 
     var gpsVal = new GpsValueModel({
@@ -73,27 +89,74 @@ router.post('/', function(req, res, next) {
     });
 
     next();
-});
+}
 
 
-
-// save context object
-router.post('/', function(req, res, next) {
+/**
+ * Queries the traffic service to retrieve the truck's distance to the closest traffic jam.
+ * Calculates the quality of this information and stores the result in the DBs context collection.
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+function saveTrafficContext(req, res, next) {
     var objId = req.body.truckId;
-    var truckContext = new TruckContextModel({
-        objectIds: [objId]
+    var lat = req.body.position.coordinates[1];
+    var lon = req.body.position.coordinates[0];
+    var serviceUrl = conf.get('trafficService');
+    var url = `${serviceUrl}?lat=${lat}&lon=${lon}`;
+
+    http.get(url, response => {
+        var body = '';
+        response.on('data', chunk => {
+            body += chunk;
+        });
+        response.on('end', () => {
+            var traffics = JSON.parse(body);
+            if(traffics.length > 0) {
+                var traffic = traffics[0];
+                var trafficAgeSeconds = (new Date() - new Date(traffic.reported * 1000)) / 1000;
+                var truckContext = new TruckContextModel({
+                    type: 'traffic',
+                    objectIds: [objId, traffic.incidentId],
+                    trafficObj: traffic,
+                    quality: timeliness(trafficAgeSeconds) // quality depends on age of traffic report
+                });
+                // determine distance to closest traffic jam
+                truckContext.save(err => {
+                    if(err) {
+                        next(err);
+                    } else {
+                        res.statusCode = 204;
+                        res.send();
+                    }
+                });
+            }
+        });
     });
-    
-    // determine distance to closest traffic jam
-    truckContext.save(err => {
-        if(err) {
-            next(err);
-        } else {
-            res.statusCode = 204;
-            res.send();
-        }
-    });
-});
+
+}
+
+/**
+ *
+ * @param age age of the information in seconds
+ * @param tolerance max age at which the information is still up to date (q = 100%)
+ * @param max age at which the information becomes worthless (q = 0%)
+ * @returns {number}
+ */
+function timeliness(age, tolerance, max) {
+    tolerance = isNaN(tolerance) ? 20 : tolerance;
+    max = isNaN(max) ? 3600 : max;
+    console.log("age is " + age);
+    if (age - tolerance <= 0) {
+        return 1.0
+    } else if (age >= max) {
+        return 0.0;
+    } else {
+        return 1.0 - age / max;
+    }
+}
 
 
 

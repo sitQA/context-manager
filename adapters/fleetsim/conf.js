@@ -11,7 +11,7 @@ var conf = convict({
     trafficService: {
         doc: "url of the traffic service which is part of the fleetsim project",
         format: "String",
-        default: "http://localhost:8080/api/v1/trafficservice",
+        default: "http://localhost:8080/api/v1/simulations/demo/trafficservice",
         env: "FLEETSIM_TRAFFICSERVICE_URL"
     }
 });
