@@ -17,7 +17,7 @@ var sensorValueSchema = new mongoose.Schema({
 
 sensorValueSchema.post('save', (doc) => {
     // publish new sensor values via AMQP
-    amqp.publish(doc, doc.objectId, doc.sensorId);
+    amqp.publish(doc, doc.objectId + '.' + doc.sensorId);
 });
 
 module.exports = mongoose.model('SensorValue', sensorValueSchema);

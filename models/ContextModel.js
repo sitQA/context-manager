@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var amqp = require('../amqp/amqpSender');
 
-var sensorValueSchema = new mongoose.Schema({
+var contextSchema = new mongoose.Schema({
     type: String,
     id: String,
     objectIds: {type: [String], index: true},
@@ -16,9 +16,9 @@ var sensorValueSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-sensorValueSchema.post('save', (doc) => {
+contextSchema.post('save', (doc) => {
     // publish new sensor values via AMQP
-    amqp.publish(doc, doc.type, doc.id);
+    amqp.publish(doc, doc.id + '.' + doc.type);
 });
 
-module.exports = mongoose.model('Context', sensorValueSchema);
+module.exports = mongoose.model('Context', contextSchema);

@@ -107,35 +107,41 @@ function saveTrafficContext(req, res, next) {
     var serviceUrl = conf.get('trafficService');
     var url = `${serviceUrl}?lat=${lat}&lon=${lon}`;
 
-    http.get(url, response => {
-        var body = '';
-        response.on('data', chunk => {
-            body += chunk;
-        });
-        response.on('end', () => {
-            var traffics = JSON.parse(body);
-            if(traffics.length > 0) {
-                var traffic = traffics[0];
-                var trafficAgeSeconds = (new Date() - new Date(traffic.reported * 1000)) / 1000;
-                var truckContext = new TruckContextModel({
-                    type: 'traffic',
-                    objectIds: [objId, traffic.incidentId],
-                    trafficObj: traffic,
-                    quality: timeliness(trafficAgeSeconds) // quality depends on age of traffic report
-                });
-                // determine distance to closest traffic jam
-                truckContext.save(err => {
-                    if(err) {
-                        next(err);
-                    } else {
-                        res.statusCode = 204;
-                        res.send();
-                    }
-                });
-            }
-        });
-    });
 
+    try {
+        http.get(url, response => {
+            var body = '';
+            response.on('data', chunk => {
+                body += chunk;
+            });
+            response.on('end', () => {
+                var traffics = JSON.parse(body);
+                if(traffics.length > 0) {
+                    var traffic = traffics[0];
+                    var trafficAgeSeconds = (new Date() - new Date(traffic.reported * 1000)) / 1000;
+                    var truckContext = new TruckContextModel({
+                        type: 'traffic',
+                        objectIds: [objId, traffic.incidentId],
+                        id: objId,
+                        trafficObj: traffic,
+                        quality: timeliness(trafficAgeSeconds) // quality depends on age of traffic report
+                    });
+                    // determine distance to closest traffic jam
+                    truckContext.save(err => {
+                        if(err) {
+                            console.log(err);
+                            next(err);
+                        } else {
+                            res.statusCode = 204;
+                            res.send();
+                        }
+                    });
+                }
+            });
+        });
+    } catch(ex) {
+        next(ex);
+    }
 }
 
 /**
@@ -148,7 +154,6 @@ function saveTrafficContext(req, res, next) {
 function timeliness(age, tolerance, max) {
     tolerance = isNaN(tolerance) ? 20 : tolerance;
     max = isNaN(max) ? 3600 : max;
-    console.log("age is " + age);
     if (age - tolerance <= 0) {
         return 1.0
     } else if (age >= max) {
